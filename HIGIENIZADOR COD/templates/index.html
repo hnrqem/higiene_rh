@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Higienizador RH</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+    <div class="app">
+        <div class="card">
+            <h1>Higienizador RH</h1>
+            <p class="subtitle">Automatize a padronização de códigos de setor com inteligência fuzzy.</p>
+
+            <form method="POST" enctype="multipart/form-data" class="form">
+                <div class="upload">
+                    <label>
+                        <i class="fa-solid fa-file-excel"></i>
+                        <span>Base RH (Planilha Suja)</span>
+                        <input type="file" name="rh" required>
+                    </label>
+                </div>
+
+                <div class="upload">
+                    <label>
+                        <i class="fa-solid fa-store"></i>
+                        <span>Base de Lojas (Referência)</span>
+                        <input type="file" name="base" required>
+                    </label>
+                </div>
+
+                <button type="submit" class="btn primary">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> Gerar Arquivo
+                </button>
+            </form>
+
+            <div class="divider"></div>
+
+            <a href="/aprender" class="btn ghost">
+                <i class="fa-solid fa-brain"></i> Treinar com Correções
+            </a>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

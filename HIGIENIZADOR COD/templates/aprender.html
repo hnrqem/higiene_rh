@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Treinar Sistema</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+    <div class="app">
+        <div class="card">
+            <h1>Treinar Inteligência</h1>
+            <p class="subtitle">Envie o arquivo corrigido com a coluna <strong>COD_CORRETO_MANUAL</strong> preenchida.</p>
+
+            <form method="POST" enctype="multipart/form-data" class="form">
+                <div class="upload">
+                    <label>
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                        <span>Planilha de Feedback</span>
+                        <input type="file" name="feedback" required>
+                    </label>
+                </div>
+                <button type="submit" class="btn primary">Atualizar Conhecimento</button>
+            </form>
+
+            {% if msg %}
+                <div class="alert">
+                    <i class="fa-solid fa-check"></i> {{ msg }}
+                </div>
+            {% endif %}
+
+            <a href="/" class="btn secondary">Voltar</a>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

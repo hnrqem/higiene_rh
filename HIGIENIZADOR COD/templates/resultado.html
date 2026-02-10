@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Arquivo Pronto</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+    <div class="app">
+        <div class="card" style="text-align: center;">
+            <i class="fa-solid fa-circle-check" style="font-size: 50px; color: #4ade80; margin-bottom: 20px;"></i>
+            <h1>Processo Concluído!</h1>
+            <p class="subtitle">Sua planilha foi higienizada. Clique abaixo para baixar o resultado.</p>
+
+            <a href="/download" class="btn primary">
+                <i class="fa-solid fa-download"></i> Baixar RH_HIGIENIZADO.xlsx
+            </a>
+
+            <a href="/" class="btn secondary">
+                <i class="fa-solid fa-arrow-left"></i> Voltar ao Início
+            </a>
+        </div>
+    </div>
+</body>
+</html>
