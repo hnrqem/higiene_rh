@@ -31,7 +31,7 @@ h1 {
     text-align: center;
     background: linear-gradient(90deg, #60a5fa, #38bdf8);
     -webkit-background-clip: text;
-    background-clip: text; /* RESOLVE O LINT DO VS CODE */
+    background-clip: text; 
     -webkit-text-fill-color: transparent;
     font-weight: 800;
 }
@@ -71,7 +71,7 @@ h1 {
 .btn.primary { background: linear-gradient(135deg, #2563eb, #38bdf8); color: white; }
 .btn.primary:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3); }
 
-/* BOTÃO GHOST ANIMADO */
+
 .btn.ghost {
     background: rgba(147, 197, 253, 0.05);
     border: 1px solid rgba(147, 197, 253, 0.3);
@@ -89,7 +89,7 @@ h1 {
     color: #fff;
 }
 
-/* Efeito de brilho que passa pelo botão */
+
 .btn.ghost::after {
     content: '';
     position: absolute;
@@ -113,7 +113,7 @@ h1 {
     padding: 12px;
     border-radius: 12px;
     font-size: 14px;
-    display: none; /* JS controla isso */
+    display: none; 
     align-items: center;
     justify-content: center;
     gap: 8px;
@@ -137,3 +137,4 @@ h1 {
 .btn.ghost {
     animation: pulse-ghost 3s infinite;
 }
+
