@@ -13,10 +13,7 @@ body {
     color: #e5e7eb;
 }
 
-.app {
-    width: 100%;
-    padding: 20px;
-}
+.app { width: 100%; padding: 20px; }
 
 .card {
     max-width: 500px;
@@ -34,7 +31,7 @@ h1 {
     text-align: center;
     background: linear-gradient(90deg, #60a5fa, #38bdf8);
     -webkit-background-clip: text;
-    background-clip: text;
+    background-clip: text; /* RESOLVE O LINT DO VS CODE */
     -webkit-text-fill-color: transparent;
     font-weight: 800;
 }
@@ -44,16 +41,10 @@ h1 {
     font-size: 14px;
     color: #94a3b8;
     margin: 12px 0 30px;
-    line-height: 1.5;
 }
 
-.form {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
+.form { display: flex; flex-direction: column; gap: 16px; }
 
-/* Estilização do Upload */
 .upload label {
     display: flex;
     align-items: center;
@@ -66,71 +57,83 @@ h1 {
     transition: all 0.3s ease;
 }
 
-.upload label:hover {
-    background: rgba(56, 189, 248, 0.05);
-    border-color: #38bdf8;
-}
-
+.upload label:hover { background: rgba(56, 189, 248, 0.05); border-color: #38bdf8; }
 .upload input { display: none; }
+.upload i { font-size: 24px; color: #60a5fa; }
 
-.upload i {
-    font-size: 24px;
-    color: #60a5fa;
+.btn {
+    width: 100%; border: none; border-radius: 12px; padding: 16px;
+    font-size: 15px; font-weight: 600; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    gap: 10px; transition: all 0.3s ease; text-decoration: none;
 }
 
-/* Botões */
-.btn {
-    width: 100%;
-    border: none;
+.btn.primary { background: linear-gradient(135deg, #2563eb, #38bdf8); color: white; }
+.btn.primary:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3); }
+
+/* BOTÃO GHOST ANIMADO */
+.btn.ghost {
+    background: rgba(147, 197, 253, 0.05);
+    border: 1px solid rgba(147, 197, 253, 0.3);
+    color: #93c5fd;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s ease;
+}
+
+.btn.ghost:hover {
+    background: rgba(147, 197, 253, 0.15);
+    border-color: #60a5fa;
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px rgba(96, 165, 250, 0.2);
+    color: #fff;
+}
+
+/* Efeito de brilho que passa pelo botão */
+.btn.ghost::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -60%;
+    width: 20%;
+    height: 200%;
+    background: rgba(255, 255, 255, 0.1);
+    transform: rotate(30deg);
+    transition: all 0.6s ease;
+}
+
+.btn.ghost:hover::after {
+    left: 120%;
+}
+
+.alert-inline {
+    background: rgba(239, 68, 68, 0.1);
+    color: #fca5a5;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    padding: 12px;
     border-radius: 12px;
-    padding: 16px;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
+    font-size: 14px;
+    display: none; /* JS controla isso */
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    text-decoration: none;
+    gap: 8px;
+    margin-bottom: 8px;
+    animation: fadeIn 0.3s ease;
 }
 
-.btn.primary {
-    background: linear-gradient(135deg, #2563eb, #38bdf8);
-    color: white;
+.divider { margin: 25px 0; height: 1px; background: linear-gradient(to right, transparent, #1e40af, transparent); }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-.btn.primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3);
-}
-
-.btn.secondary {
-    background: rgba(255, 255, 255, 0.05);
-    color: #93c5fd;
-    margin-top: 10px;
+@keyframes pulse-ghost {
+    0% { border-color: rgba(147, 197, 253, 0.3); }
+    50% { border-color: rgba(96, 165, 250, 0.8); }
+    100% { border-color: rgba(147, 197, 253, 0.3); }
 }
 
 .btn.ghost {
-    background: transparent;
-    border: 1px solid rgba(147, 197, 253, 0.2);
-    color: #93c5fd;
-}
-
-/* Alertas */
-.alert {
-    margin-top: 20px;
-    padding: 15px;
-    border-radius: 12px;
-    text-align: center;
-    font-size: 14px;
-    background: rgba(34, 197, 94, 0.1);
-    color: #4ade80;
-    border: 1px solid rgba(34, 197, 94, 0.2);
-}
-
-.divider {
-    margin: 25px 0;
-    height: 1px;
-    background: linear-gradient(to right, transparent, #1e40af, transparent);
+    animation: pulse-ghost 3s infinite;
 }
