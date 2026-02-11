@@ -2,36 +2,46 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Treinar Sistema</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aprendizado Manual</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
     <div class="app">
         <div class="card">
-            <h1>Treinar Inteligência</h1>
-            <p class="subtitle">Envie o arquivo corrigido com a coluna <strong>COD_CORRETO_MANUAL</strong> preenchida.</p>
+            <h1><i class="fa-solid fa-brain"></i> Aprendizado Manual</h1>
+            <p class="subtitle">Envie a planilha corrigida manualmente (coluna COD_CORRETO_MANUAL) para treinar o sistema.</p>
 
             <form method="POST" enctype="multipart/form-data" class="form">
                 <div class="upload">
                     <label>
                         <i class="fa-solid fa-cloud-arrow-up"></i>
-                        <span>Planilha de Feedback</span>
-                        <input type="file" name="feedback" required>
-                    </label>
+                        <span>Selecionar Planilha de Feedback</span>
+                        <input type="file" name="feedback"> </label>
                 </div>
-                <button type="submit" class="btn primary">Atualizar Conhecimento</button>
+
+                <div id="js-alert" style="display: none;" class="alert-inline"></div>
+
+                <button type="submit" class="btn primary">
+                    Atualizar Base de Conhecimento
+                </button>
             </form>
 
             {% if msg %}
-                <div class="alert">
+                <div class="alert success" style="margin-top: 20px;">
                     <i class="fa-solid fa-check"></i> {{ msg }}
                 </div>
             {% endif %}
 
-            <a href="/" class="btn secondary">Voltar</a>
+            <div class="divider"></div>
+
+            <a href="/" class="btn ghost">
+                <i class="fa-solid fa-chevron-left"></i> Voltar ao Início
+            </a>
         </div>
     </div>
-    <script src="{{ url_for('static', filename='app.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='app.js') }}?v=1.2"></script>
 </body>
 </html>
