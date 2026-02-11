@@ -12,9 +12,6 @@ os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
 app = Flask(__name__)
 
-# ==========================
-# INDEX / PROCESSAR
-# ==========================
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
@@ -46,9 +43,6 @@ def index():
 
 
 
-# ==========================
-# DOWNLOAD
-# ==========================
 @app.route('/download')
 def download():
     return send_file(
@@ -56,10 +50,6 @@ def download():
         as_attachment=True
     )
 
-
-# ==========================
-# APRENDER
-# ==========================
 @app.route('/aprender', methods=['GET', 'POST'])
 def aprender():
     if request.method == 'POST':
@@ -88,3 +78,4 @@ if __name__ == '__main__':
     app.run(debug=True)
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)
+
