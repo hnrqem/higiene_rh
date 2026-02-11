@@ -4,18 +4,13 @@ import unidecode
 from rapidfuzz import process, fuzz
 import os
 
-# =============================
-# CAMINHOS
-# =============================
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 PASTA_DADOS = os.path.join(BASE_DIR, "data")
 os.makedirs(PASTA_DADOS, exist_ok=True)
 
 CAMINHO_APRENDIZADO = os.path.join(PASTA_DADOS, "base_conhecimento.csv")
 
-# =============================
-# FUNÇÕES AUXILIARES
-# =============================
 def limpar_nome(texto):
     if pd.isna(texto):
         return ""
@@ -36,18 +31,15 @@ def salvar_aprendizado(df):
     df.to_csv(CAMINHO_APRENDIZADO, index=False)
 
 
-# =============================
-# BUSCA INTELIGENTE
-# =============================
+
 def buscar_codigo(nome, base, mapa_aprendizado):
     if not nome:
         return None, None, "vazio"
 
-    # 1️⃣ aprendizado manual (prioridade máxima)
+
     if nome in mapa_aprendizado:
         return mapa_aprendizado[nome], 100, "aprendido"
 
-    # 2️⃣ fuzzy match
     match = process.extractOne(
         nome,
         base["LOJA_LIMPA"],
@@ -63,9 +55,7 @@ def buscar_codigo(nome, base, mapa_aprendizado):
     return None, None, "nao_encontrado"
 
 
-# =============================
-# PROCESSAMENTO PRINCIPAL
-# =============================
+
 def processar_planilha(path_rh, path_base, output_path):
     df_rh = pd.read_excel(path_rh)
     df_base = pd.read_excel(path_base, sheet_name="LOJAS ATIVAS")
@@ -89,9 +79,6 @@ def processar_planilha(path_rh, path_base, output_path):
     df_rh.to_excel(output_path, index=False)
 
 
-# =============================
-# APRENDIZADO COM FEEDBACK
-# =============================
 def aprender_com_feedback(path_feedback):
     df = pd.read_excel(path_feedback)
 
@@ -116,3 +103,4 @@ def aprender_com_feedback(path_feedback):
 
 
     print(f"✅ {len(novos)} aprendizados salvos")
+
