@@ -18,7 +18,7 @@
                     <label>
                         <i class="fa-solid fa-file-excel"></i>
                         <span>Base RH (Planilha Suja)</span>
-                        <input type="file" name="rh" required>
+                        <input type="file" name="rh">
                     </label>
                 </div>
 
@@ -26,9 +26,11 @@
                     <label>
                         <i class="fa-solid fa-store"></i>
                         <span>Base de Lojas (Referência)</span>
-                        <input type="file" name="base" required>
+                        <input type="file" name="base">
                     </label>
                 </div>
+
+                <div id="js-alert" style="display: none;" class="alert-inline"></div>
 
                 <button type="submit" class="btn primary">
                     <i class="fa-solid fa-wand-magic-sparkles"></i> Gerar Arquivo
@@ -42,6 +44,6 @@
             </a>
         </div>
     </div>
-    <script src="{{ url_for('static', filename='app.js') }}"></script>
+    <script src="{{ url_for('static', filename='app.js') }}?v=1.2"></script>
 </body>
 </html>
