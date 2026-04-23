@@ -14,7 +14,10 @@ os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 app = Flask(__name__)
 
 # 🔥 inicializa DB ao subir
-init_db()
+@app.before_first_request
+def inicializar():
+    from higiene_rh import init_db
+    init_db()
 
 
 @app.route('/', methods=['GET', 'POST'])
