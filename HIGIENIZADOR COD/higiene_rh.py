@@ -10,8 +10,16 @@ import psycopg2
 # =========================
 DATABASE_URL = os.environ.get("DATABASE_URL")
 
+if DATABASE_URL and DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+
+
 def conectar_db():
-    return psycopg2.connect(DATABASE_URL)
+    if not DATABASE_URL:
+        raise Exception("DATABASE_URL não configurada")
+
+    print("🔌 Conectando no banco...")
+    return psycopg2.connect(DATABASE_URL, sslmode='require')
 
 
 # =========================
