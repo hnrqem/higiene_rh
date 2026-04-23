@@ -99,8 +99,6 @@ def aprender_com_feedback(path_feedback):
 
     salvar_aprendizado(base)
 
-    return len(novos)
-
-
     print(f"✅ {len(novos)} aprendizados salvos")
-
+    return len(novos)
+    
