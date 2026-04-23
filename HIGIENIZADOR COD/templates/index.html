@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Higienizador RH</title>
+    <title>Gerador Cód. Lojas</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
     <div class="app">
         <div class="card">
-            <h1>Higienizador RH</h1>
-            <p class="subtitle">Automatize a padronização de códigos de setor com inteligência fuzzy.</p>
+            <h1>Gerador Cód. Lojas</h1>
+            <p class="subtitle">Automatize a padronização de códigos de Loja.</p>
 
             <form method="POST" enctype="multipart/form-data" class="form">
                 <div class="upload">
                     <label>
                         <i class="fa-solid fa-file-excel"></i>
-                        <span>Base RH (Planilha Suja)</span>
+                        <span>Base Nome Lojas (Planilha Suja)</span>
                         <input type="file" name="rh">
                     </label>
                 </div>
@@ -25,7 +25,7 @@
                 <div class="upload">
                     <label>
                         <i class="fa-solid fa-store"></i>
-                        <span>Base de Lojas (Referência)</span>
+                        <span>Hierarquia (Referência)</span>
                         <input type="file" name="base">
                     </label>
                 </div>
@@ -47,3 +47,4 @@
     <script src="{{ url_for('static', filename='app.js') }}?v=1.2"></script>
 </body>
 </html>
+
