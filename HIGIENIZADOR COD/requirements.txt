@@ -3,4 +3,5 @@ pandas
 openpyxl
 rapidfuzz
 unidecode
+psycopg2-binary
 gunicorn
