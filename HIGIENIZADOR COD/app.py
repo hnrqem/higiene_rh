@@ -30,7 +30,7 @@ def index():
         arquivo_rh.save(path_rh)
         arquivo_base.save(path_base)
 
-        output_path = os.path.join(OUTPUT_FOLDER, 'RH_HIGIENIZADO.xlsx')
+        output_path = os.path.join(OUTPUT_FOLDER, 'PLANILHA_HIGIENIZADA.xlsx')
 
         processar_planilha(path_rh, path_base, output_path)
 
@@ -46,7 +46,7 @@ def index():
 @app.route('/download')
 def download():
     return send_file(
-        os.path.join(OUTPUT_FOLDER, 'RH_HIGIENIZADO.xlsx'),
+        os.path.join(OUTPUT_FOLDER, 'PLANILHA_HIGIENIZADA.xlsx'),
         as_attachment=True
     )
 
@@ -78,4 +78,5 @@ if __name__ == '__main__':
     app.run(debug=True)
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)
+
 
