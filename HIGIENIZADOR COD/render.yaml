@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: higiene-rh-app
+    env: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn app:app"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: higiene-db
+          property: connectionString
+
+databases:
+  - name: higiene-db
