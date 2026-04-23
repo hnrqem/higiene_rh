@@ -14,10 +14,16 @@ os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 app = Flask(__name__)
 
 # 🔥 inicializa DB ao subir
-@app.before_first_request
-def inicializar():
-    from higiene_rh import init_db
+from higiene_rh import init_db
+
+# roda uma vez ao iniciar o container
+try:
     init_db()
+    print("✅ Banco inicializado")
+except Exception as e:
+    print("❌ Erro ao inicializar banco:", e)
+
+app = Flask(__name__)
 
 
 @app.route('/', methods=['GET', 'POST'])
