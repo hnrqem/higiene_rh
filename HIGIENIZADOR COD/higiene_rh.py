@@ -134,26 +134,26 @@ def carregar_aprendizado():
 # SALVAR
 # =========================
 def salvar_aprendizado(novos):
-    conn = conectar_db()
-    cur = conn.cursor()
-
     for chave, cod in novos.items():
         if not cod:
             continue
 
         cod = tratar_codigo(cod)
 
+        conn = conectar_db()
+        cur = conn.cursor()
+
         try:
-            # estrutura nova
             cur.execute("""
                 INSERT INTO aprendizado (chave, cod_correto)
                 VALUES (%s, %s)
                 ON CONFLICT (chave)
                 DO UPDATE SET cod_correto = EXCLUDED.cod_correto
             """, (chave, cod))
+
         except:
             conn.rollback()
-            # estrutura antiga
+
             cur.execute("""
                 INSERT INTO aprendizado (setor_limpo, cod_correto)
                 VALUES (%s, %s)
@@ -161,9 +161,9 @@ def salvar_aprendizado(novos):
                 DO UPDATE SET cod_correto = EXCLUDED.cod_correto
             """, (chave, cod))
 
-    conn.commit()
-    cur.close()
-    conn.close()
+        conn.commit()
+        cur.close()
+        conn.close()
 
 
 # =========================
