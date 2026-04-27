@@ -57,14 +57,35 @@ def normalizar_semantico(texto):
     stopwords = {"LOJA", "FILIAL", "UNIDADE", "STORE"}
     estados = {"SP", "RJ", "MG", "RS", "SC", "PR"}
 
-    tokens = [
-        t for t in texto.split()
-        if t not in stopwords and t not in estados
-    ]
+    tokens = texto.split()
 
-    tokens.sort()
+    tokens_filtrados = []
 
-    return " ".join(tokens)
+    for t in tokens:
+        t = t.strip()
+
+        # remove stopwords
+        if t in stopwords:
+            continue
+
+        # remove estados isolados
+        if t in estados:
+            continue
+
+        # remove estados grudados (SPITAQUERA)
+        for uf in estados:
+            if t.startswith(uf):
+                t = t.replace(uf, "")
+
+        if t:
+            tokens_filtrados.append(t)
+
+    # remove duplicados
+    tokens_filtrados = list(set(tokens_filtrados))
+
+    tokens_filtrados.sort()
+
+    return " ".join(tokens_filtrados)
 
 
 # =========================
@@ -236,7 +257,8 @@ def aprender_com_feedback(path_feedback):
     df["CHAVE"] = df["SETOR"].apply(normalizar_semantico)
     df["COD_CORRETO_MANUAL"] = df["COD_CORRETO_MANUAL"].apply(tratar_codigo)
 
-    novos = dict(zip(df["CHAVE"], df["COD_CORRETO_MANUAL"]))
+    df_group = df.groupby("CHAVE")["COD_CORRETO_MANUAL"].agg(lambda x: x.mode()[0])
+    novos = df_group.to_dict()
 
     if not novos:
         return 0
