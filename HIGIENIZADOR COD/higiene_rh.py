@@ -98,6 +98,7 @@ def carregar_aprendizado():
         cur.execute("SELECT chave, cod_correto FROM aprendizado")
         rows = cur.fetchall()
     except:
+        conn.rollback() 
         # fallback estrutura antiga
         cur.execute("SELECT setor_limpo, cod_correto FROM aprendizado")
         rows = cur.fetchall()
@@ -130,6 +131,7 @@ def salvar_aprendizado(novos):
                 DO UPDATE SET cod_correto = EXCLUDED.cod_correto
             """, (chave, cod))
         except:
+            conn.rollback()
             # estrutura antiga
             cur.execute("""
                 INSERT INTO aprendizado (setor_limpo, cod_correto)
