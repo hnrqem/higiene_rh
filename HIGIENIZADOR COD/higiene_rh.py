@@ -93,8 +93,14 @@ def carregar_aprendizado():
     conn = conectar_db()
     cur = conn.cursor()
 
-    cur.execute("SELECT chave, cod_correto FROM aprendizado")
-    rows = cur.fetchall()
+    try:
+        # tenta estrutura nova
+        cur.execute("SELECT chave, cod_correto FROM aprendizado")
+        rows = cur.fetchall()
+    except:
+        # fallback estrutura antiga
+        cur.execute("SELECT setor_limpo, cod_correto FROM aprendizado")
+        rows = cur.fetchall()
 
     cur.close()
     conn.close()
@@ -115,12 +121,22 @@ def salvar_aprendizado(novos):
 
         cod = tratar_codigo(cod)
 
-        cur.execute("""
-            INSERT INTO aprendizado (chave, cod_correto)
-            VALUES (%s, %s)
-            ON CONFLICT (chave)
-            DO UPDATE SET cod_correto = EXCLUDED.cod_correto
-        """, (chave, cod))
+        try:
+            # estrutura nova
+            cur.execute("""
+                INSERT INTO aprendizado (chave, cod_correto)
+                VALUES (%s, %s)
+                ON CONFLICT (chave)
+                DO UPDATE SET cod_correto = EXCLUDED.cod_correto
+            """, (chave, cod))
+        except:
+            # estrutura antiga
+            cur.execute("""
+                INSERT INTO aprendizado (setor_limpo, cod_correto)
+                VALUES (%s, %s)
+                ON CONFLICT (setor_limpo)
+                DO UPDATE SET cod_correto = EXCLUDED.cod_correto
+            """, (chave, cod))
 
     conn.commit()
     cur.close()
