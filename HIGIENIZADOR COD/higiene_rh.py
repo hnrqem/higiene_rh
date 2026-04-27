@@ -137,37 +137,44 @@ def buscar_codigo(nome, base, mapa_aprendizado):
     if not nome_limpo:
         return None, None, "vazio"
 
-    # 🔥 1. match exato semântico
+    # aprendizado direto
     if nome_semantico in mapa_aprendizado:
         return mapa_aprendizado[nome_semantico], 100, "aprendido_semantico"
 
-    # 🔥 2. fuzzy no aprendizado
+    # fuzzy no aprendizado
     if mapa_aprendizado:
         match_ap = process.extractOne(
             nome_semantico,
-            mapa_aprendizado.keys(),
+            list(mapa_aprendizado.keys()),
             scorer=fuzz.token_sort_ratio
         )
 
         if match_ap and match_ap[1] >= 90:
             return mapa_aprendizado[match_ap[0]], match_ap[1], "aprendido_fuzzy"
 
-    # 🔥 3. fuzzy na base (fallback)
+    # fuzzy base
     match = process.extractOne(
         nome_limpo,
-        base["LOJA_LIMPA"],
+        base["LOJA_LIMPA"].dropna(),
         scorer=fuzz.token_sort_ratio
     )
 
     if match:
         loja = match[0]
         score = match[1]
-        cod = base.loc[base["LOJA_LIMPA"] == loja, "CÓD"].values[0]
-        cod = tratar_codigo(cod)
+
+        coluna_cod = "CÓD" if "CÓD" in base.columns else "COD"
+
+        linha = base.loc[base["LOJA_LIMPA"] == loja]
+
+        if linha.empty:
+            return None, score, "fuzzy_erro"
+
+        cod = tratar_codigo(linha.iloc[0][coluna_cod])
+
         return cod, score, "fuzzy_base"
 
     return None, None, "nao_encontrado"
-
 
 # =========================
 # PROCESSAR
