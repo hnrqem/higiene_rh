@@ -23,7 +23,6 @@ try:
 except Exception as e:
     print("❌ Erro ao inicializar banco:", e)
 
-app = Flask(__name__)
 
 
 @app.route('/', methods=['GET', 'POST'])
