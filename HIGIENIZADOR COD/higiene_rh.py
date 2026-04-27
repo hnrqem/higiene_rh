@@ -6,7 +6,7 @@ import os
 import psycopg2
 
 # =========================
-# DB CONFIG (RENDER)
+# DB CONFIG
 # =========================
 DATABASE_URL = os.environ.get("DATABASE_URL")
 
@@ -18,12 +18,23 @@ def conectar_db():
     if not DATABASE_URL:
         raise Exception("DATABASE_URL não configurada")
 
-    print("🔌 Conectando no banco...")
     return psycopg2.connect(DATABASE_URL, sslmode='require')
 
 
 # =========================
-# LIMPEZA
+# TRATAR CÓDIGO
+# =========================
+def tratar_codigo(valor):
+    if pd.isna(valor):
+        return None
+    try:
+        return str(int(float(valor)))
+    except:
+        return str(valor).strip()
+
+
+# =========================
+# LIMPEZA BASE
 # =========================
 def limpar_nome(texto):
     if pd.isna(texto):
@@ -35,7 +46,29 @@ def limpar_nome(texto):
 
 
 # =========================
-# INIT TABLE
+# 🔥 SEMÂNTICA
+# =========================
+def normalizar_semantico(texto):
+    texto = limpar_nome(texto)
+
+    if not texto:
+        return ""
+
+    stopwords = {"LOJA", "FILIAL", "UNIDADE", "STORE"}
+    estados = {"SP", "RJ", "MG", "RS", "SC", "PR"}
+
+    tokens = [
+        t for t in texto.split()
+        if t not in stopwords and t not in estados
+    ]
+
+    tokens.sort()
+
+    return " ".join(tokens)
+
+
+# =========================
+# INIT DB
 # =========================
 def init_db():
     conn = conectar_db()
@@ -43,7 +76,7 @@ def init_db():
 
     cur.execute("""
         CREATE TABLE IF NOT EXISTS aprendizado (
-            setor_limpo TEXT PRIMARY KEY,
+            chave TEXT PRIMARY KEY,
             cod_correto TEXT
         )
     """)
@@ -60,7 +93,7 @@ def carregar_aprendizado():
     conn = conectar_db()
     cur = conn.cursor()
 
-    cur.execute("SELECT setor_limpo, cod_correto FROM aprendizado")
+    cur.execute("SELECT chave, cod_correto FROM aprendizado")
     rows = cur.fetchall()
 
     cur.close()
@@ -76,16 +109,18 @@ def salvar_aprendizado(novos):
     conn = conectar_db()
     cur = conn.cursor()
 
-    for setor, cod in novos.items():
+    for chave, cod in novos.items():
         if not cod:
             continue
 
+        cod = tratar_codigo(cod)
+
         cur.execute("""
-            INSERT INTO aprendizado (setor_limpo, cod_correto)
+            INSERT INTO aprendizado (chave, cod_correto)
             VALUES (%s, %s)
-            ON CONFLICT (setor_limpo)
+            ON CONFLICT (chave)
             DO UPDATE SET cod_correto = EXCLUDED.cod_correto
-        """, (setor, cod))
+        """, (chave, cod))
 
     conn.commit()
     cur.close()
@@ -96,16 +131,30 @@ def salvar_aprendizado(novos):
 # MATCH
 # =========================
 def buscar_codigo(nome, base, mapa_aprendizado):
-    nome = limpar_nome(nome)
+    nome_limpo = limpar_nome(nome)
+    nome_semantico = normalizar_semantico(nome)
 
-    if not nome:
+    if not nome_limpo:
         return None, None, "vazio"
 
-    if nome in mapa_aprendizado:
-        return mapa_aprendizado[nome], 100, "aprendido"
+    # 🔥 1. match exato semântico
+    if nome_semantico in mapa_aprendizado:
+        return mapa_aprendizado[nome_semantico], 100, "aprendido_semantico"
 
+    # 🔥 2. fuzzy no aprendizado
+    if mapa_aprendizado:
+        match_ap = process.extractOne(
+            nome_semantico,
+            mapa_aprendizado.keys(),
+            scorer=fuzz.token_sort_ratio
+        )
+
+        if match_ap and match_ap[1] >= 90:
+            return mapa_aprendizado[match_ap[0]], match_ap[1], "aprendido_fuzzy"
+
+    # 🔥 3. fuzzy na base (fallback)
     match = process.extractOne(
-        nome,
+        nome_limpo,
         base["LOJA_LIMPA"],
         scorer=fuzz.token_sort_ratio
     )
@@ -114,7 +163,8 @@ def buscar_codigo(nome, base, mapa_aprendizado):
         loja = match[0]
         score = match[1]
         cod = base.loc[base["LOJA_LIMPA"] == loja, "CÓD"].values[0]
-        return cod, score, "fuzzy"
+        cod = tratar_codigo(cod)
+        return cod, score, "fuzzy_base"
 
     return None, None, "nao_encontrado"
 
@@ -129,9 +179,11 @@ def processar_planilha(path_rh, path_base, output_path):
     df_rh["SETOR_LIMPO"] = df_rh["SETOR"].apply(limpar_nome)
     df_base["LOJA_LIMPA"] = df_base["LOJA"].apply(limpar_nome)
 
+    df_base["CÓD"] = df_base["CÓD"].apply(tratar_codigo)
+
     mapa = carregar_aprendizado()
 
-    resultados = df_rh["SETOR_LIMPO"].apply(
+    resultados = df_rh["SETOR"].apply(
         lambda x: buscar_codigo(x, df_base, mapa)
     )
 
@@ -156,9 +208,10 @@ def aprender_com_feedback(path_feedback):
     df = df[df["COD_CORRETO_MANUAL"].notna()]
     df = df[df["COD_CORRETO_MANUAL"].astype(str).str.strip() != ""]
 
-    df["SETOR_LIMPO"] = df["SETOR_LIMPO"].apply(limpar_nome)
+    df["CHAVE"] = df["SETOR"].apply(normalizar_semantico)
+    df["COD_CORRETO_MANUAL"] = df["COD_CORRETO_MANUAL"].apply(tratar_codigo)
 
-    novos = dict(zip(df["SETOR_LIMPO"], df["COD_CORRETO_MANUAL"]))
+    novos = dict(zip(df["CHAVE"], df["COD_CORRETO_MANUAL"]))
 
     if not novos:
         return 0
