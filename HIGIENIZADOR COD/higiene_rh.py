@@ -46,7 +46,7 @@ def limpar_nome(texto):
 
 
 # =========================
-# 🔥 SEMÂNTICA
+# SEMÂNTICA
 # =========================
 def normalizar_semantico(texto):
     texto = limpar_nome(texto)
